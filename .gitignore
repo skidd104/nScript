@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+
+# Build directories (The compiled C++ binaries)
+build/
+Release/
+Debug/
+
+# Lock files (Optional, but common)
+package-lock.json
+
+# OS generated files
+.DS_Store
