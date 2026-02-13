@@ -32,50 +32,75 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
         Napi::Env env = info.Env();
         size_t argCount = info.Length();
 
-        if (argCount == 0) {
-            return Napi::Float64Array::New(env, 0);
-
-        }
+        if (argCount == 0) return env.Null();
 
         Napi::Float64Array data;
+        Napi::Uint32Array shape;
 
-        if (argCount == 1 && (info[0].IsArray() || info[0].IsTypedArray())) {
+        if (info[0].IsArray()) {
             Napi::Array input = info[0].As<Napi::Array>();
             data = Napi::Float64Array::New(env, input.Length());
-
             double* rawPtr = data.Data();
+
             for (uint32_t i = 0; i < input.Length(); i++) {
-
                 rawPtr[i] = input.Get(i).As<Napi::Number>().DoubleValue();
-            }
-        } else {
-            data = Napi::Float64Array::New(env, argCount);
 
-            double* rawPtr = data.Data();
-            for (size_t i = 0; i < argCount; i++) {
-                if (!info[i].IsNumber()) {
-                    Napi::TypeError::New(env, "All arguments be numbers").ThrowAsJavaScriptException();
-                    return env.Null();
+            }
+
+            if (argCount > 1 && info[1].IsArray()) {
+                Napi::Array shapeInput = info[1].As<Napi::Array>();
+                shape = Napi::Uint32Array::New(env, shapeInput.Length());
+                uint32_t* shapePtr = shape.Data();
+
+                for (uint32_t i = 0; i < shapeInput.Length(); i++) {
+                    shapePtr[i] = shapeInput.Get(i).As<Napi::Number>().Uint32Value();
 
                 }
 
+            } else {
+                shape = Napi::Uint32Array::New(env, 1);
+                shape[0] = (uint32_t)data.ElementLength();
+
+            }
+
+            if (info.Length() > 1 && info[1].IsArray()) {
+                size_t totalExpectedElements = 1;
+                uint32_t* shapePtr = shape.Data();
+
+                for (uint32_t i = 0; i < shape.ElementLength(); i++) {
+                    totalExpectedElements *= shapePtr[i];
+
+                }
+
+                if (totalExpectedElements != data.ElementLength()) {
+                    std::string errorMsg = "Value:: cannot reshape array of size " + std::to_string(data.ElementLength()) + " into shape (" ;
+                    Napi::TypeError::New(env, errorMsg + "..)").ThrowAsJavaScriptException();
+                        return env.Null();
+
+                }
+
+            }
+
+        } else {
+            data = Napi::Float64Array::New(env, argCount);
+            double* rawPtr = data.Data();
+            for (size_t i = 0; i < argCount; i++) {
                 rawPtr[i] = info[i].As<Napi::Number>().DoubleValue();
 
             }
 
+            shape = Napi::Uint32Array::New(env, 1);
+            shape[0] = (uint32_t)argCount;
+
         }
 
 
+        Napi::Object ndarray = Napi::Object::New(env);
+        ndarray.Set("data", data);
+        ndarray.Set("shape", shape);
+        ndarray.Set("ndim", Napi::Number::New(env, shape.ElementLength()));
 
-
-
-        //Enable for debugging
-        //Napi::Object ndarray = Napi::Object::New(env);
-        //ndarray.Set("data", data);
-        //ndarray.Set("length", Napi::Number::New(env, data.ElementLength()));
-        //ndarray.Set("type", Napi::String::New(env, "float64"));
-        //
-        return data;
+        return ndarray;
 
 }
 
@@ -84,6 +109,8 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
+
+
         return exports;
 
 }
