@@ -1,4 +1,22 @@
 #include <napi.h>
+#include <string.h>
+
+//Practice
+Napi::Value Method(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (!info[0].IsString()) {
+        Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::String mystr = info[0].As<Napi::String>();
+    Napi::Number count = Napi::Number::New(env, mystr.Utf8Value().length());
+
+    return count;
+}
+
+
 
 //Template
 Napi::Value Add(const Napi::CallbackInfo& info) {
@@ -6,8 +24,7 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
     
     if (info.Length() < 2) {
         Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
-        
-            
+
     return env.Null();
 
     }
@@ -106,9 +123,15 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
 
 
 
+//Main Entry Point
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
+        //Production
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
+
+        //Prototypes
+        exports.Set(Napi::String::New(env, "hello"), Napi::Function::New(env, Method));
+
 
 
         return exports;
