@@ -1,34 +1,18 @@
 #include <napi.h>
-#include <string.h>
-
-//Practice
-Napi::Value Method(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-
-    if (!info[0].IsString()) {
-        Napi::TypeError::New(env, "String expected").ThrowAsJavaScriptException();
-        return env.Null();
-    }
-
-    Napi::String mystr = info[0].As<Napi::String>();
-    Napi::Number count = Napi::Number::New(env, mystr.Utf8Value().length());
-
-    return count;
-}
-
-
 
 //Template
 Napi::Value Add(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
+    //Point to return
+   Napi::Env env = info.Env();
     
+    //Safety Check
     if (info.Length() < 2) {
         Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
-
+        
+            
     return env.Null();
 
     }
-
 
     if (!info[0].IsNumber() || !info[1].IsNumber()) {
             Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
@@ -36,9 +20,22 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
 
     }
 
+    //Arguments
     double arg0 = info[0].As<Napi::Number>().DoubleValue();
     double arg1 = info[1].As<Napi::Number>().DoubleValue();
     Napi::Number num = Napi::Number::New(env, arg0 + arg1);
+
+    return num;
+}
+
+//Add Five Test
+Napi::Number Addfive(const Napi::CallbackInfo& info) {
+    Napi::Env env= info.Env();
+
+    uint32_t five = 5;
+    uint32_t arg0 = info[0].As<Napi::Number>().Int32Value();
+
+    Napi::Number num = Napi::Number::New(env, five + arg0);
 
     return num;
 
@@ -123,16 +120,10 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
 
 
 
-//Main Entry Point
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-        //Production
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
+        exports.Set(Napi::String::New(env, "addfive"), Napi::Function::New(env, Addfive));
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
-
-        //Prototypes
-        exports.Set(Napi::String::New(env, "hello"), Napi::Function::New(env, Method));
-
-
 
         return exports;
 

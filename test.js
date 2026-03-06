@@ -11,12 +11,12 @@ console.log ("Array Shape:", arr.shape);
 console.log ("Array Dimension:", arr.ndim);
 */ 
 
-console.log (numscrpt.hello('Maya'));
 
 
 
+const arr = numscrpt.addfive(1);
 
-
+console.log (arr);
 
 
 
