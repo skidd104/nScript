@@ -20,7 +20,7 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
 
     }
 
-    //Arguments
+    //Arguments info[0].As<Napi::Number>().DoubleValue means you open the element 1;
     double arg0 = info[0].As<Napi::Number>().DoubleValue();
     double arg1 = info[1].As<Napi::Number>().DoubleValue();
     Napi::Number num = Napi::Number::New(env, arg0 + arg1);
@@ -28,18 +28,29 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
     return num;
 }
 
-//Add Five Test
-Napi::Number Addfive(const Napi::CallbackInfo& info) {
-    Napi::Env env= info.Env();
+//Add Single Array Function 
+Napi::Value SArray(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-    uint32_t five = 5;
-    uint32_t arg0 = info[0].As<Napi::Number>().Int32Value();
+    if (info.Length() > 0 && info[0].IsArray()) {
+    
+        //Initialize Array
+        Napi::Array array = info[0].As<Napi::Array>();
+        uint32_t len = array.Length();
 
-    Napi::Number num = Napi::Number::New(env, five + arg0);
+        //Array Return Point
+        Napi::Array result = Napi::Array::New(env, len);
 
-    return num;
+        for (size_t i = 0; i < len; i++) {
+            Napi::Value val = array.Get(i);
+            result.Set(i, val);
 
+        }
+        return result;
+    }
+    return Napi::Number::New(env, 0);
 }
+
 
 //Array Function
 Napi::Value Array(const Napi::CallbackInfo& info) {
@@ -121,12 +132,12 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
+
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
-        exports.Set(Napi::String::New(env, "addfive"), Napi::Function::New(env, Addfive));
+        exports.Set(Napi::String::New(env, "sarray"), Napi::Function::New(env,SArray));
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
 
         return exports;
-
 }
 
-NODE_API_MODULE(addon, Init);
+NODE_API_MODULE(numscrpt_core, Init);

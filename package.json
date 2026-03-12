@@ -1,5 +1,15 @@
 {
+  "name": "function_arguments",
+  "version": "0.0.0",
+  "description": "Node.js Addons Example #2",
+  "main": "test.js",
+  "private": true,
   "dependencies": {
-    "node-addon-api": "^8.5.0"
-  }
+    "bindings": "~1.5.0",
+    "node-addon-api": "^8.1.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "gypfile": true
 }
