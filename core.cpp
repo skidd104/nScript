@@ -101,10 +101,100 @@ Napi::Value Sum(const Napi::CallbackInfo& info) {
 }
 
 
+
+Napi::Value Zeros(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 1 ) {
+        return env.Null();
+    }
+
+    if (info[0].IsArray()) {
+        Napi::Array shape = info[0].As<Napi::Array>();
+
+        if (shape.Length() < 2 ) return env.Null();
+
+        uint32_t rows = shape.Get((uint32_t)0).As<Napi::Number>();
+        uint32_t cols = shape.Get((uint32_t)1).As<Napi::Number>();
+
+        Napi::Array matrix = Napi::Array::New(env, rows);
+
+        for (uint32_t i = 0; i < rows; i++) {
+            Napi::Array row = Napi::Array::New(env, cols);
+
+            for  (uint32_t j = 0; j < cols; j++) {
+                row.Set(j, Napi::Number::New(env, 0));
+            }
+            matrix.Set(i, row);
+
+        }
+        return matrix;
+    }
+
+    if (info[0].IsNumber()) {
+        uint32_t count = info[0].As<Napi::Number>().Uint32Value();
+        Napi::Array arr = Napi::Array::New(env, count);
+
+        for (uint32_t i = 0; i < count; i++) {
+            arr.Set(i, Napi::Number::New(env, 0));
+        }
+        return arr;
+    }
+    return env.Null();
+}
+
+Napi::Value Reshape(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    //First Safety Check
+    if (info.Length() < 2 || !info[0].IsArray() || !info[1].IsArray() ) {
+        return env.Null();
+    }
+
+    Napi::Array inputArr = info[0].As<Napi::Array>();
+    Napi::Array shape = info[1].As<Napi::Array>();
+
+    //Second Safety Check
+    if (shape.Length() < 2) return env.Null();
+
+
+    uint32_t rows = shape.Get((uint32_t)0).As<Napi::Number>().Uint32Value();
+    uint32_t cols = shape.Get((uint32_t)1).As<Napi::Number>().Uint32Value();
+
+    //Third Safety Check
+    if (inputArr.Length() != (rows * cols)) {
+        Napi::TypeError::New(env, "Mismatch rows and cols");
+        return env.Null();
+    }
+
+
+
+
+    Napi::Array matrix = Napi::Array::New(env, rows);
+    uint32_t k = 0;
+
+    for (uint32_t i = 0; i < rows; i++) {
+        Napi::Array row = Napi::Array::New(env, cols);
+        for (uint32_t j = 0; j < cols; j++) {
+            row.Set(j, inputArr.Get(k));
+            k++;
+        }
+
+        matrix.Set(i, row);
+    }
+
+    return matrix;
+
+}
+
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
         exports.Set(Napi::String::New(env, "shape"), Napi::Function::New(env, Shape));
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Sum));
+        exports.Set(Napi::String::New(env, "zeros"), Napi::Function::New(env, Zeros));
+        exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
+
 
         return exports;
 }

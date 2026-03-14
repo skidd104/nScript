@@ -11,26 +11,25 @@ console.log ("Array Shape:", arr.shape);
 console.log ("Array Dimension:", arr.ndim);
 */ 
 
+/*
+//Array Decleration
 const array1 = numscrpt.array([1,2,3,4,5]);
 const array2 = numscrpt.array([[1,2,3],[4,5,6]]);
 const array3 = numscrpt.array([[[1,2,3], [4,5,6]], [[1,2,3],[4,5,6]]]);
-
-
-//const rows = array3.length;
-//const columns = array3[0].length;
-
-//console.log (`Dimension: ${rows}x${columns}`);
-//
-//
 const array5 = numscrpt.array([[1,2],[3,4],[5,6]]);
+//Shape Decleration
 const shape = numscrpt.shape(array5);
-
-
-console.log (array5);
-console.log (shape);
-
+//Add Decleration
 const test = numscrpt.add(array3);
+//Zeros Decleration
+const zeros = numscrpt.zeros([3,4]);
+const zeros = numscrpt.zeros(5);
+//Reshape Decleration
+let arr = numscrpt.array([1,2,3,4,5,6]);
+let reshaped_arr = numscrpt.reshape(arr, [2,3]);
+*/
 
-console.log (test);
+
+
 
 
