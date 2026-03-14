@@ -11,3 +11,4 @@ package-lock.json
 
 # OS generated files
 .DS_Store
+.clangd
