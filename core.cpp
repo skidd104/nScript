@@ -1,143 +1,111 @@
 #include <napi.h>
 
-//Template
-Napi::Value Add(const Napi::CallbackInfo& info) {
-    //Point to return
-   Napi::Env env = info.Env();
-    
-    //Safety Check
-    if (info.Length() < 2) {
-        Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
-        
-            
-    return env.Null();
-
-    }
-
-    if (!info[0].IsNumber() || !info[1].IsNumber()) {
-            Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
-            return env.Null();
-
-    }
-
-    //Arguments info[0].As<Napi::Number>().DoubleValue means you open the element 1;
-    double arg0 = info[0].As<Napi::Number>().DoubleValue();
-    double arg1 = info[1].As<Napi::Number>().DoubleValue();
-    Napi::Number num = Napi::Number::New(env, arg0 + arg1);
-
-    return num;
-}
-
-//Add Single Array Function 
-Napi::Value SArray(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-
-    if (info.Length() > 0 && info[0].IsArray()) {
-    
-        //Initialize Array
-        Napi::Array array = info[0].As<Napi::Array>();
-        uint32_t len = array.Length();
-
-        //Array Return Point
-        Napi::Array result = Napi::Array::New(env, len);
-
-        for (size_t i = 0; i < len; i++) {
-            Napi::Value val = array.Get(i);
-            result.Set(i, val);
-
-        }
-        return result;
-    }
-    return Napi::Number::New(env, 0);
-}
-
-
 //Array Function
+//Not Updated to be the fastest im using the most basic shit
 Napi::Value Array(const Napi::CallbackInfo& info) {
-        Napi::Env env = info.Env();
-        size_t argCount = info.Length();
+    Napi::Env env = info.Env();
+    
+    if (info.Length() == 0) return env.Null();
 
-        if (argCount == 0) return env.Null();
+    if (!info[0].IsArray()) {
+        Napi::Array single = Napi::Array::New(env, 1);
+        single.Set((uint32_t)0, info[0]);
+        return single;
+    }
 
-        Napi::Float64Array data;
-        Napi::Uint32Array shape;
+    
+    //1. info[0] is the OUTER array: [[1,2,3], [4,5,6]]
+    Napi::Array outerArray = info[0].As<Napi::Array>();
+    uint32_t rowCount =  outerArray.Length();
 
-        if (info[0].IsArray()) {
-            Napi::Array input = info[0].As<Napi::Array>();
-            data = Napi::Float64Array::New(env, input.Length());
-            double* rawPtr = data.Data();
 
-            for (uint32_t i = 0; i < input.Length(); i++) {
-                rawPtr[i] = input.Get(i).As<Napi::Number>().DoubleValue();
+    //Parent Array Return Point
+    Napi::Array resultMatrix = Napi::Array::New(env, rowCount);
 
+    for (size_t i = 0; i < rowCount; i++) {
+        Napi::Value element = outerArray.Get(i);
+        //Geting the inner array at index i 
+        //Here is the technique since the inner child is array we should get it as Array
+        if (element.IsArray()) {
+
+            Napi::Array innerArray = outerArray.Get(i).As<Napi::Array>();
+            uint32_t colCount = innerArray.Length();
+
+            Napi::Array resultRow = Napi::Array::New(env, colCount);
+
+            for (uint32_t j = 0; j < colCount; j++) {
+                resultRow.Set(j, innerArray.Get(j));
             }
 
-            if (argCount > 1 && info[1].IsArray()) {
-                Napi::Array shapeInput = info[1].As<Napi::Array>();
-                shape = Napi::Uint32Array::New(env, shapeInput.Length());
-                uint32_t* shapePtr = shape.Data();
-
-                for (uint32_t i = 0; i < shapeInput.Length(); i++) {
-                    shapePtr[i] = shapeInput.Get(i).As<Napi::Number>().Uint32Value();
-
-                }
-
-            } else {
-                shape = Napi::Uint32Array::New(env, 1);
-                shape[0] = (uint32_t)data.ElementLength();
-
-            }
-
-            if (info.Length() > 1 && info[1].IsArray()) {
-                size_t totalExpectedElements = 1;
-                uint32_t* shapePtr = shape.Data();
-
-                for (uint32_t i = 0; i < shape.ElementLength(); i++) {
-                    totalExpectedElements *= shapePtr[i];
-
-                }
-
-                if (totalExpectedElements != data.ElementLength()) {
-                    std::string errorMsg = "Value:: cannot reshape array of size " + std::to_string(data.ElementLength()) + " into shape (" ;
-                    Napi::TypeError::New(env, errorMsg + "..)").ThrowAsJavaScriptException();
-                        return env.Null();
-
-                }
-
-            }
+            resultMatrix.Set(i, resultRow);
 
         } else {
-            data = Napi::Float64Array::New(env, argCount);
-            double* rawPtr = data.Data();
-            for (size_t i = 0; i < argCount; i++) {
-                rawPtr[i] = info[i].As<Napi::Number>().DoubleValue();
-
-            }
-
-            shape = Napi::Uint32Array::New(env, 1);
-            shape[0] = (uint32_t)argCount;
-
+            resultMatrix.Set(i, element);
         }
+    }
+
+    return resultMatrix;
+}
 
 
-        Napi::Object ndarray = Napi::Object::New(env);
-        ndarray.Set("data", data);
-        ndarray.Set("shape", shape);
-        ndarray.Set("ndim", Napi::Number::New(env, shape.ElementLength()));
+//This is already good
+Napi::Value Shape(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
-        return ndarray;
+    // Safety Check
+    if (!info[0].IsArray()) return env.Null();
+
+    Napi::Array outerArray = info[0].As<Napi::Array>();
+
+    uint32_t rows = outerArray.Length();
+
+    uint32_t cols = 0;
+    if (rows > 0 && outerArray.Get((uint32_t)0).IsArray()) {
+        Napi::Array firstRow = outerArray.Get((uint32_t)0).As<Napi::Array>();
+        cols = firstRow.Length();
+    }
+    
+    Napi::Array shapeResult = Napi::Array::New(env, 2);
+    shapeResult.Set((uint32_t)0, Napi::Number::New(env, rows));
+    shapeResult.Set((uint32_t)1, Napi::Number::New(env, cols));
+    return shapeResult;
 
 }
 
+
+//Recursive Math Engine Summation for the Sum Method
+double recursiveSumHelper(Napi::Value value) {
+    double total = 0;
+
+    if (value.IsArray()) {
+        Napi::Array arr = value.As<Napi::Array>();
+
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            total += recursiveSumHelper(arr.Get(i));
+        }
+
+    } else if (value.IsNumber()) {
+        total = value.As<Napi::Number>().DoubleValue();
+    }
+
+    return total;
+}
+//Sum of Array Function
+Napi::Value Sum(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (!info[0].IsArray()) return env.Null();
+
+    double finalSum = recursiveSumHelper(info[0]);
+    return Napi::Number::New(env, finalSum);
+}
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-
-        exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
-        exports.Set(Napi::String::New(env, "sarray"), Napi::Function::New(env,SArray));
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
+        exports.Set(Napi::String::New(env, "shape"), Napi::Function::New(env, Shape));
+        exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Sum));
 
         return exports;
 }
-
 NODE_API_MODULE(numscrpt_core, Init);
