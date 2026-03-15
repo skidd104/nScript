@@ -1,4 +1,6 @@
 #include <napi.h>
+#include <vector>
+#include <string>
 
 //Array Function
 //Not Updated to be the fastest im using the most basic shit
@@ -187,6 +189,135 @@ Napi::Value Reshape(const Napi::CallbackInfo& info) {
 
 }
 
+//Ndim
+// Helper function to count depth
+uint32_t getDepth(Napi::Value val) {
+    if (!val.IsArray()) {
+        return 0;
+    }
+
+    Napi::Array arr = val.As<Napi::Array>();
+
+    if (arr.Length() == 0) {
+        return 1;
+    }
+
+    return 1 + getDepth(arr.Get((uint32_t)0));
+}
+Napi::Value NDim(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) {
+        return Napi::Number::New(env, 0);
+    }
+
+    uint32_t dims = getDepth(info[0]);
+    return Napi::Number::New(env, dims);
+
+}
+
+//Size
+//Able to support flat array for faster performance
+uint32_t internalSizeCounter(Napi::Value val) {
+    if (!val.IsArray()) return 1;
+
+    Napi::Array arr = val.As<Napi::Array>();
+    uint32_t count = 0;
+
+    for (uint32_t i = 0; i < arr.Length(); i++) {
+        count += internalSizeCounter(arr.Get(i));
+    }
+
+    return count;
+}
+
+Napi::Value Size(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return Napi::Number::New(env, 0);
+
+    if (info[0].IsTypedArray()) {
+        Napi::TypedArray typedArr = info[0].As<Napi::TypedArray>();
+        return Napi::Number::New(env, typedArr.ElementLength());
+    }
+
+    if (info[0].IsArray()) {
+        uint32_t total = internalSizeCounter(info[0]);
+        return Napi::Number::New(env, total);
+    }
+
+
+    return Napi::Number::New(env, 0);
+}
+
+//Recursive Flattener
+void flattenRecursive(Napi::Value val, std::vector<double>& flatData) {
+    if (val.IsNumber()) {
+        flatData.push_back(val.As<Napi::Number>().DoubleValue());
+    } else if (val.IsArray()) {
+        Napi::Array arr = val.As<Napi::Array>();
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            flattenRecursive(arr.Get(i), flatData);
+        }
+    } else if (val.IsTypedArray()) {
+        Napi::Float64Array ta = val.As<Napi::Float64Array>();
+
+        for (size_t i = 0; i < ta.ElementLength(); i++) {
+            flatData.push_back(ta[i]);
+        }
+    }
+}
+//Dtype
+Napi::Value Dtype(const Napi::CallbackInfo& info) {
+
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return env.Null();
+
+    if (info.Length() == 1) {
+        if (info[0].IsTypedArray()) {
+            napi_typedarray_type type = info[0].As<Napi::TypedArray>().TypedArrayType();
+            if (type == napi_int32_array) return Napi::String::New(env, "int32");
+            if (type == napi_float64_array) return Napi::String::New(env, "float64");
+            return Napi::String::New(env, "unknown_typed");
+        }
+
+        return Napi::String::New(env, "float64");
+    }
+
+    std::string code = info[1].As<Napi::String>().Utf8Value();
+
+    std::vector<double> flatData;
+    flattenRecursive(info[0], flatData);
+    size_t len = flatData.size();
+
+    if (code == "i") {
+        Napi::Int32Array result = Napi::Int32Array::New(env, len);
+        for (size_t i = 0; i < len; i++) {
+            result[i] = static_cast<int32_t>(flatData[i]);
+        }
+        return result;
+    } else if (code == "f") {
+        Napi::Float64Array result = Napi::Float64Array::New(env, len);
+        for (size_t i = 0; i < len; i++) {
+            result[i] = flatData[i];
+        }
+        return result;
+          
+    } else if (code == "S") {
+        Napi::Array result = Napi::Array::New(env, len);
+        for (size_t i = 0; i < len; i++) {
+            std::string s = std::to_string(flatData[i]);
+
+            s.erase(s.find_last_not_of('0') + 1, std::string::npos);
+            if (s.back() == '.') s.pop_back();
+            result.Set(i, Napi::String::New(env, s));
+        }
+        return result;
+    }
+    return env.Null();;
+}
+
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
@@ -194,8 +325,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Sum));
         exports.Set(Napi::String::New(env, "zeros"), Napi::Function::New(env, Zeros));
         exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
-
-
+        exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
+        exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));
+        exports.Set(Napi::String::New(env, "dtype"), Napi::Function::New(env, Dtype));
         return exports;
 }
 NODE_API_MODULE(numscrpt_core, Init);

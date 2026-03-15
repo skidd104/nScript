@@ -27,9 +27,25 @@ const zeros = numscrpt.zeros(5);
 //Reshape Decleration
 let arr = numscrpt.array([1,2,3,4,5,6]);
 let reshaped_arr = numscrpt.reshape(arr, [2,3]);
+//Ndim Decleration
+const d1 = numscrpt.array([1,2,3]);
+const d2 = numscrpt.array([[1,2,3],[4,5,6]]);
+const d3 = numscrpt.array([[[1, 2, 3], [4, 5, 6]], [[1, 2, 3], [4, 5, 6]]]);
+const dimension = numscrpt.ndim(d2);
+//Size Decleration
+const flat_arr = new Float64Array([1,2,3,4]);
+const mult_arr = ([[1,2,3],[4,5,6]]); 
+const totalsize = numscrpt.size(mult_arr);
+//Dtype Decleration
+// 1. Casting a 3D Nested Array to a Flat Int32Array
+const d3 = [[[1.1, 2.2], [3.3, 4.4]]];
+const intArr = numscrpt.dtype(d3, 'i'); 
+console.log(intArr); 
+
+// 2. Casting to Strings
+const strArr = numscrpt.dtype([10.5, 20.9], 'S');
+console.log(strArr); 
+// 3. Simple Inspection
+console.log(numscrpt.dtype(intArr)); 
 */
-
-
-
-
 
