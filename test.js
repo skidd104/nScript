@@ -19,8 +19,8 @@ const array3 = numscrpt.array([[[1,2,3], [4,5,6]], [[1,2,3],[4,5,6]]]);
 const array5 = numscrpt.array([[1,2],[3,4],[5,6]]);
 //Shape Decleration
 const shape = numscrpt.shape(array5);
-//Add Decleration
-const test = numscrpt.add(array3);
+//Sum Decleration
+const test = numscrpt.sum(array3);
 //Zeros Decleration
 const zeros = numscrpt.zeros([3,4]);
 const zeros = numscrpt.zeros(5);
@@ -47,5 +47,22 @@ const strArr = numscrpt.dtype([10.5, 20.9], 'S');
 console.log(strArr); 
 // 3. Simple Inspection
 console.log(numscrpt.dtype(intArr)); 
+
+//Add Decleration
+// 1D Addition
+const a = [1,2,3];
+const b = [10,20,30];
+console.log (numscrpt.add(a, b));
+
+// 2D Addition
+const matrix1 = [[1,1], [1,1]];
+const matrix2 = [[5,5], [5,5]];
+console.log(numscrpt.add(matrix1, matrix2));
+
+// Error Case
+numscrpt.add([1,2], [1,2,3]);
+
 */
+
+
 

@@ -103,6 +103,53 @@ Napi::Value Sum(const Napi::CallbackInfo& info) {
 }
 
 
+//Add Array Function
+Napi::Value recursiveAdd(Napi::Env env, Napi::Value val1, Napi::Value val2) {
+    
+    if (val1.IsNumber() && val2.IsNumber()) {
+        double sum = val1.As<Napi::Number>().DoubleValue() + val2.As<Napi::Number>().DoubleValue();
+        return Napi::Number::New(env, sum);
+    }
+
+    if (val1.IsArray() && val2.IsArray()) {
+        Napi::Array arr1 = val1.As<Napi::Array>();
+        Napi::Array arr2 = val2.As<Napi::Array>();
+
+        if (arr1.Length() != arr2.Length()) {
+            Napi::TypeError::New(env, "Shapes must match for addition").ThrowAsJavaScriptException();
+            return env.Null();
+
+        }
+
+        uint32_t len = arr1.Length();
+        Napi::Array result = Napi::Array::New(env, len);
+
+        for (uint32_t i = 0; i < len; i++) {
+            result.Set(i, recursiveAdd(env, arr1.Get(i), arr2.Get(i)));
+
+        }
+        return result;
+    }
+
+    Napi::TypeError::New(env, "Invalid types for addition").ThrowAsJavaScriptException();
+    return env.Null();
+}
+
+Napi::Value Add(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    
+    if (info.Length() < 2) {
+        Napi::TypeError::New(env, "Two arrays required").ThrowAsJavaScriptException();
+        return env.Null();
+
+    }
+
+    return recursiveAdd(env, info[0], info[1]);
+}
+
+
+
+
 
 Napi::Value Zeros(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -250,7 +297,7 @@ Napi::Value Size(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, 0);
 }
 
-//Recursive Flattener
+//Dtype Recursive Flattener
 void flattenRecursive(Napi::Value val, std::vector<double>& flatData) {
     if (val.IsNumber()) {
         flatData.push_back(val.As<Napi::Number>().DoubleValue());
@@ -319,11 +366,14 @@ Napi::Value Dtype(const Napi::CallbackInfo& info) {
 }
 
 
+
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
         exports.Set(Napi::String::New(env, "shape"), Napi::Function::New(env, Shape));
-        exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Sum));
+        exports.Set(Napi::String::New(env, "sum"), Napi::Function::New(env, Sum));
         exports.Set(Napi::String::New(env, "zeros"), Napi::Function::New(env, Zeros));
+        exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
         exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
         exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
         exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));
