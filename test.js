@@ -62,7 +62,28 @@ console.log(numscrpt.add(matrix1, matrix2));
 // Error Case
 numscrpt.add([1,2], [1,2,3]);
 
-*/
+//Mean Decleration
+// 1 D Array
+console.log(numscrpt.mean([1,2,3,4,5]));
 
+// 2 D Array
+const matrix = [
+    [10, 20],
+    [30, 40]
+];
+console.log (numscrpt.mean(matrix));
+
+// 3 D array 
+const d3 = [ [[1,1], [1,1]], [[2,2], [2,2]]];
+console.log (numscrpt.mean(d3));
+//Flatten Decleration
+const matrix = [[1, 2, 3], [4, 5, 6]];
+
+const flat = numscrpt.flatten(matrix);
+console.log(flat); 
+
+const deep = [[[1]], [[2]], [[3]]];
+console.log(numscrpt.flatten(deep)); 
+*/
 
 

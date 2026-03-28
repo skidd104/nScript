@@ -147,9 +147,48 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
     return recursiveAdd(env, info[0], info[1]);
 }
 
+//Mean Action
+void flattenMeanHelper(Napi::Value val, std::vector<double>& flatData) {
+    if (val.IsNumber()) {
+        flatData.push_back(val.As<Napi::Number>().DoubleValue());
+    } else if (val.IsArray()) {
+        Napi::Array arr = val.As<Napi::Array>();
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            flattenMeanHelper(arr.Get(i), flatData);
+        }
+    } else if (val.IsTypedArray()) {
+        Napi::Float64Array ta = val.As<Napi::Float64Array>();
+        for (size_t i = 0; i < ta.ElementLength(); i++) {
+            flatData.push_back(ta[i]);
+        }
+    }
 
+}
 
+Napi::Value Mean(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
+    if (info.Length() < 1) {
+        return Napi::Number::New(env, 0);
+    }
+
+    std::vector<double> flatData;
+    flattenMeanHelper(info[0], flatData);
+
+    if (flatData.empty()) {
+        return Napi::Number::New(env, 0);
+    }
+
+    double sum = 0;
+    for (double val : flatData) {
+        sum += val;
+    }
+
+    double mean  = sum / static_cast<double>(flatData.size());
+
+    return Napi::Number::New(env, mean);
+
+}
 
 Napi::Value Zeros(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -297,6 +336,41 @@ Napi::Value Size(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, 0);
 }
 
+//Flatten
+void flattenInternal(Napi::Value val, std::vector<double>& flatData) {
+    if (val.IsNumber()) {
+        flatData.push_back(val.As<Napi::Number>().DoubleValue());
+    } else if (val.IsArray()) {
+        Napi::Array arr = val.As<Napi::Array>();
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            flattenInternal(arr.Get(i), flatData);
+        }
+    } else if (val.IsTypedArray()) {
+        Napi::Float64Array ta = val.As<Napi::Float64Array>();
+        for (size_t i = 0; i < ta.ElementLength(); i++) {
+            flatData.push_back(ta[i]);
+        }
+    }
+}
+
+Napi::Value Flatten(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return env.Null();
+
+    std::vector<double> flatData;
+
+    flattenInternal(info[0], flatData); 
+
+    Napi::Float64Array result = Napi::Float64Array::New(env, flatData.size());
+
+    for (size_t i = 0; i < flatData.size(); i++) {
+        result[i] = flatData[i];
+    }
+
+    return result;
+}
+
 //Dtype Recursive Flattener
 void flattenRecursive(Napi::Value val, std::vector<double>& flatData) {
     if (val.IsNumber()) {
@@ -373,8 +447,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "shape"), Napi::Function::New(env, Shape));
         exports.Set(Napi::String::New(env, "sum"), Napi::Function::New(env, Sum));
         exports.Set(Napi::String::New(env, "zeros"), Napi::Function::New(env, Zeros));
+        exports.Set(Napi::String::New(env, "mean"), Napi::Function::New(env, Mean));
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
         exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
+        exports.Set(Napi::String::New(env, "flatten"), Napi::Function::New(env, Flatten));
         exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
         exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));
         exports.Set(Napi::String::New(env, "dtype"), Napi::Function::New(env, Dtype));

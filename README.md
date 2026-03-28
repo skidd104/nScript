@@ -7,6 +7,9 @@ Reshape - Done
 Ndim - Done
 Size - Done
 Dtype - Done
+Mean - Done
+Flatten - Done
+
 
 ## Arrays 
 Support 1d,2d,3d Array
@@ -29,6 +32,8 @@ Returns shape of array
 
 ## Reshape Decleration
 -let arr = numscrpt.array([1,2,3,4]);
+-let reshapedArr = numscrpt.reshape(arr, [2,2]);
+--Error Case--
 -let reshapedArr = numscrpt.reshape(arr, [2,3]);
 
 ## Ndim Decleration
@@ -65,4 +70,26 @@ Returns shape of array
 
 -Error Case
 -numscrpt.add([1,2], [1,2,3]);
+
+## Mean Decleration
+### 1D Array
+-console.log(numscrpt.mean([1, 2, 3, 4, 5])); // 3
+
+### 2D Matrix
+-const matrix = [
+    [10, 20],
+    [30, 40]
+];
+-console.log(numscrpt.mean(matrix)); // 25
+
+### 3D Array
+-const d3 = [ [[1, 1], [1, 1]], [[2, 2], [2, 2]] ];
+-console.log(numscrpt.mean(d3)); // 1.5
+
+## Flatten
+-const matrix = [[1,2,3], [4,5,6]];
+-const flat = numscrpt.flatten(matrix);
+
+
+
 
