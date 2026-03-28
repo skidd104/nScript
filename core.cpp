@@ -439,6 +439,96 @@ Napi::Value Dtype(const Napi::CallbackInfo& info) {
     return env.Null();;
 }
 
+Napi::Value Transpose(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1 || !info[0].IsArray()) {
+        return env.Null();
+    }
+
+    Napi::Array inputMatrix = info[0].As<Napi::Array>();
+
+    uint32_t rows = inputMatrix.Length();
+
+    if (rows == 0) return Napi::Array::New(env, 0);
+
+    Napi::Value firstRow = inputMatrix.Get((uint32_t)0);
+
+    if (!firstRow.IsArray()) {
+        return inputMatrix;
+    }
+
+    uint32_t cols = firstRow.As<Napi::Array>().Length();
+
+    Napi::Array resultMatrix = Napi::Array::New(env, cols);
+
+    for (uint32_t i = 0; i < cols; i++) {
+        resultMatrix.Set(i, Napi::Array::New(env, rows));
+    }
+
+    for (uint32_t i = 0; i < rows; i++) {
+        Napi::Array currentRow = inputMatrix.Get(i).As<Napi::Array>();
+
+        for (uint32_t j = 0; j < cols; j++) {
+            Napi::Array targetRow = resultMatrix.Get(j).As<Napi::Array>();
+            targetRow.Set(i, currentRow.Get(j));
+
+        }
+
+    }
+
+    return resultMatrix;
+}
+
+
+//Dot Function
+Napi::Value Dot(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 2 || !info[0].IsArray() || !info[1].IsArray()) {
+        Napi::TypeError::New(env, "Two matrices (arrays) required").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Array A = info[0].As<Napi::Array>();
+    Napi::Array B = info[1].As<Napi::Array>();
+
+    uint32_t rowsA = A.Length();
+    uint32_t colsA = A.Get((uint32_t)0).As<Napi::Array>().Length();
+    uint32_t rowsB = B.Length();
+    uint32_t colsB = B.Get((uint32_t)0).As<Napi::Array>().Length();
+
+    if (colsA != rowsB) {
+        Napi::Error::New(env, "Incompatible dimensions for dot product: ciks if A must match rows of B").ThrowAsJavaScriptException();
+
+        return env.Null();
+    }
+
+    Napi::Array result  = Napi::Array::New(env, rowsA);
+
+    for (uint32_t i = 0; i < rowsA; i++) {
+        Napi::Array rowA = A.Get(i).As<Napi::Array>();
+        Napi::Array newRow = Napi::Array::New(env, colsB);
+
+        for (uint32_t j = 0; j < colsB; j++) {
+            double sum = 0;
+            for (uint32_t k = 0; k < colsA; k++) {
+                double valA = rowA.Get(k).As<Napi::Number>().DoubleValue();
+                double valB = B.Get(k).As<Napi::Array>().Get(j).As<Napi::Number>().DoubleValue();
+                sum += valA * valB;
+            }
+            newRow.Set(j, Napi::Number::New(env, sum));
+
+        }
+        result.Set(i, newRow);
+    }
+    return result;
+}
+
+
+
+
+
 
 
 
@@ -451,6 +541,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "add"), Napi::Function::New(env, Add));
         exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
         exports.Set(Napi::String::New(env, "flatten"), Napi::Function::New(env, Flatten));
+        exports.Set(Napi::String::New(env, "transpose"), Napi::Function::New(env, Transpose));
+        exports.Set(Napi::String::New(env, "dot"), Napi::Function::New(env, Dot));
         exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
         exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));
         exports.Set(Napi::String::New(env, "dtype"), Napi::Function::New(env, Dtype));

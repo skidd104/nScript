@@ -76,6 +76,7 @@ console.log (numscrpt.mean(matrix));
 // 3 D array 
 const d3 = [ [[1,1], [1,1]], [[2,2], [2,2]]];
 console.log (numscrpt.mean(d3));
+
 //Flatten Decleration
 const matrix = [[1, 2, 3], [4, 5, 6]];
 
@@ -84,6 +85,27 @@ console.log(flat);
 
 const deep = [[[1]], [[2]], [[3]]];
 console.log(numscrpt.flatten(deep)); 
+
+//Transpose
+const matrix = [
+    [1,2,3],
+    [4,5,6]
+
+];
+const flipped = numscrpt.transpose(matrix);
+console.log(flipped);
+
+//Dot
+const A = [
+    [1,2,3],
+    [4,5,6]
+];
+
+const B = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+];
+const result = numscrpt.dot(A, B);
+console.log (result);
 */
-
-

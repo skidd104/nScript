@@ -9,6 +9,8 @@ Size - Done
 Dtype - Done
 Mean - Done
 Flatten - Done
+Transpose - Done
+Dot - Done
 
 
 ## Arrays 
@@ -89,6 +91,29 @@ Returns shape of array
 ## Flatten
 -const matrix = [[1,2,3], [4,5,6]];
 -const flat = numscrpt.flatten(matrix);
+
+# Linear Algebra Functions
+
+## Transpose
+-const matrix = [
+    [1,2,3],
+    [4,5,6]
+
+];
+-const flipped = numscrpt.transpose(matrix);
+
+## Dot
+-const A = [
+    [1,2,3],
+    [4,5,6]
+];
+
+-const B = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+];
+-const result = numscrpt.dot(A, B);
 
 
 
