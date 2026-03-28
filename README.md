@@ -11,6 +11,7 @@ Mean - Done
 Flatten - Done
 Transpose - Done
 Dot - Done
+Inverse - Done
 
 
 ## Arrays 
@@ -92,7 +93,6 @@ Returns shape of array
 -const matrix = [[1,2,3], [4,5,6]];
 -const flat = numscrpt.flatten(matrix);
 
-# Linear Algebra Functions
 
 ## Transpose
 -const matrix = [
@@ -101,6 +101,9 @@ Returns shape of array
 
 ];
 -const flipped = numscrpt.transpose(matrix);
+
+
+# Linear Algebra Functions
 
 ## Dot
 -const A = [
@@ -115,6 +118,17 @@ Returns shape of array
 ];
 -const result = numscrpt.dot(A, B);
 
+## Inverse
 
+-const A = [
+    [4, 7],
+    [2, 6]
+];
 
-
+-const invA = numscrpt.inv(A);
+-const clean = (matrix) => {
+    return matrix.map(row => 
+        row.map(val => Math.abs(val) < 1e-10 ? 0 : val)
+    );
+}
+-const result = numscrpt.dot(A, invA);

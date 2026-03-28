@@ -1,6 +1,7 @@
 #include <napi.h>
 #include <vector>
 #include <string>
+#include <cmath>
 
 //Array Function
 //Not Updated to be the fastest im using the most basic shit
@@ -525,12 +526,76 @@ Napi::Value Dot(const Napi::CallbackInfo& info) {
     return result;
 }
 
+Napi::Value Inverse(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
 
+    if (info.Length() < 1 || !info[0].IsArray()) return env.Null();
+    Napi::Array input = info[0].As<Napi::Array>();
+    uint32_t n = input.Length();
 
+    std::vector<std::vector<double>> mat(n, std::vector<double>(n));
+    std::vector<std::vector<double>> inv(n, std::vector<double>(n, 0.0));
 
+    for (uint32_t i = 0; i < n; i++) {
+        Napi::Array row = input.Get(i).As<Napi::Array>();
+        if (row.Length() != n) {
+            Napi::Error::New(env, "Matrix must be square").ThrowAsJavaScriptException();
+            return env.Null();
+        }
 
+        for(uint32_t j = 0; j < n; j++) {
+            mat[i][j] = row.Get(j).As<Napi::Number>().DoubleValue();
+            if (i == j) inv[i][j] = 1.0;
+        }
+    }
 
+    for (uint32_t i = 0; i < n; i++) {
+        uint32_t pivot = i;
 
+        for (uint32_t j = i + 1; j < n; j++) {
+            if (std::abs(mat[j][i]) > std::abs(mat[pivot][i])) pivot = j;
+        }
+
+        std::swap(mat[i], mat[pivot]);
+        std::swap(inv[i], inv[pivot]);
+
+        double diagVal = mat[i][i];
+
+        if (std::abs(diagVal) < 1e-10) {
+            Napi::Error::New(env, "Matrix is singular and cannot be inverted").ThrowAsJavaScriptException();
+            return env.Null();
+        }
+
+        for (uint32_t j = 0; j < n; j++) {
+            mat[i][j] /= diagVal;
+            inv[i][j] /= diagVal;
+        }
+
+        for (uint32_t k = 0; k < n; k++) {
+            if (k == i) continue;
+            double factor = mat[k][i];
+            for (uint32_t j = 0; j < n; j++) {
+                mat[k][j] -= factor * mat[i][j];
+                inv[k][j] -= factor * inv[i][j];
+
+            }
+
+        }
+    }
+
+    Napi::Array result = Napi::Array::New(env, n);
+    for (uint32_t i = 0; i < n; i++) {
+        Napi::Array row = Napi::Array::New(env, n);
+        for (uint32_t j = 0; j < n; j++) {
+            row.Set(j, Napi::Number::New(env, inv[i][j]));
+
+        }
+        result.Set(i, row);
+    }
+
+    return result;
+
+}
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
@@ -542,6 +607,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "reshape"), Napi::Function::New(env, Reshape));
         exports.Set(Napi::String::New(env, "flatten"), Napi::Function::New(env, Flatten));
         exports.Set(Napi::String::New(env, "transpose"), Napi::Function::New(env, Transpose));
+        exports.Set(Napi::String::New(env, "inv"), Napi::Function::New(env, Inverse));
         exports.Set(Napi::String::New(env, "dot"), Napi::Function::New(env, Dot));
         exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
         exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));

@@ -108,4 +108,20 @@ const B = [
 ];
 const result = numscrpt.dot(A, B);
 console.log (result);
+// Inverse
+const A = [
+    [4, 7],
+    [2, 6]
+];
+
+const invA = numscrpt.inv(A);
+console.log(invA); 
+
+const clean = (matrix) => {
+    return matrix.map(row => 
+        row.map(val => Math.abs(val) < 1e-10 ? 0 : val)
+    );
+}
+const result = numscrpt.dot(A, invA);
+console.log(clean(result));
 */
