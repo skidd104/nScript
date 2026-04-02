@@ -19,7 +19,7 @@ if [ -f "test.js" ]; then
     echo "--------------------------"
     node test.js
     echo "--------------------------"
-    echo "Success!"
+    echo "Ugh ugh"
 else
     echo "Error: test.js not found in current directory."
     exit 1

@@ -16,7 +16,10 @@ Std - Done
 Min - Done
 Max - Done
 Median - Done
-Variance -
+Variance - Done
+Column - Done
+Row - Done
+Slice - Done
 
 
 ## Arrays 
@@ -138,6 +141,8 @@ Returns shape of array
 }
 -const result = numscrpt.dot(A, invA);
 
+# Exploratory Data Analysis 
+
 ## Std
 -const lowSpread = [10, 11, 10, 9, 10];
 -console.log(numscrpt.std(lowSpread)); 
@@ -163,4 +168,58 @@ Returns shape of array
 -console.log(numscrpt.median([10, 2, 38, 23, 38])); 
 -console.log(numscrpt.median([10, 2, 38, 23])); 
 -const prices = [[200], [250], [10000]];
--console.log(numscrpt.median(prices)); // 250
+-console.log(numscrpt.median(prices)); // 251
+
+## Variance
+-const data = [1, 2, 3, 4, 5];
+
+-const variance = numscrpt.var(data);
+-const stdDev = numscrpt.std(data);
+
+-console.log("Variance:", variance); // 2
+-console.log("Std Dev:", stdDev);     // 1.414 (sqrt of 2)
+
+-console.log(numscrpt.var([[10, 20], [30, 40]])); // 125
+
+## Column
+-const dataset = [
+    [25, 50000, 1], // [Age, Salary, Remote]
+    [30, 60000, 0],
+    [45, 95000, 1],
+    [22, 42000, 0]
+];
+
+// 1. Extract Salaray only
+-const salaries = numscrpt.column(dataset, 1); 
+
+// 2. Perform Stats on just that column
+-const avgSalary = numscrpt.mean(salaries);
+-const maxSalary = numscrpt.max(salaries);
+-console.log(`Average Salary: ${avgSalary}`);
+
+## Row
+
+-const dataset = [
+    [1, 250000], // ID, Price
+    [2, 310000],
+    [3, 10000000] 
+];
+
+-const prices = numscrpt.column(dataset, 1);
+-const maxVal = numscrpt.max(prices);
+-const outlierIndex = Array.from(prices).indexOf(maxVal);
+
+-const record = numscrpt.row(dataset, outlierIndex);
+-console.log("Full Record of Outlier:", record);
+
+## Slice
+const dataset = [
+    [1, "Alice"],
+    [2, "Bob"],
+    [3, "Charlie"],
+    [4, "David"],
+    [5, "Eve"]
+];
+
+const chunk = numscrpt.slice(dataset, 1, 4);
+

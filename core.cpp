@@ -699,6 +699,7 @@ Napi::Value Max(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, currentMax);
 }
 
+//Median
 Napi::Value Median(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -724,6 +725,131 @@ Napi::Value Median(const Napi::CallbackInfo& info) {
 
     return Napi::Number::New(env, median);
 }
+//Variance
+Napi::Value Var(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return Napi::Number::New(env, 0);
+
+    std::vector<double> data;
+
+
+    flattenInternal(info[0], data);
+
+    if (data.empty()) return Napi::Number::New(env, 0);
+
+    double sum = 0;
+    for (double v : data) sum += v;
+    double mean = sum / data.size();
+
+    double sqDiffSum = 0;
+
+    for (double v : data) {
+        sqDiffSum += std::pow(v - mean, 2);
+
+    }
+
+    double variance = sqDiffSum / data.size();
+    return Napi::Number::New(env, variance);
+}
+
+Napi::Value Column(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 2 || !info[0].IsArray() || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Usage: .col(matrix, index)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Array matrix = info[0].As<Napi::Array>();
+    uint32_t colIndex = info[1].As<Napi::Number>().Uint32Value();
+    uint32_t rows = matrix.Length();
+
+    if (rows == 0) return Napi::Array::New(env, 0);
+
+    Napi::Float64Array result = Napi::Float64Array::New(env, rows);
+
+    for (uint32_t i = 0; i < rows; i++) {
+        Napi::Value rowVal = matrix.Get(i);
+
+        if (rowVal.IsArray()) {
+            Napi::Array row = rowVal.As<Napi::Array>();
+
+            if (colIndex < row.Length()) {
+                result[i] = row.Get(colIndex).As<Napi::Number>().DoubleValue();
+
+            } else {
+                result[i] = 0.0;
+            }
+
+        } else {
+            result[i] = 0.0;
+
+        }
+
+    }
+
+    return result;
+}
+
+Napi::Value Row(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 2 || !info[0].IsArray() || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Usage: .row(matrix, index)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Array matrix = info[0].As<Napi::Array>();
+    uint32_t rowIndex = info[1].As<Napi::Number>().Uint32Value();
+
+    if (rowIndex >= matrix.Length()) {
+        Napi::Error::New(env, "Row index out of bounds").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Value row = matrix.Get(rowIndex);
+
+    if (!row.IsArray()) {
+        return row;
+
+    }
+
+    return row.As<Napi::Array>();
+}
+
+Napi::Value Slice(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 3 || !info[0].IsArray() || !info[1].IsNumber() || !info[2].IsNumber()) {
+        Napi::TypeError::New(env, "Usage: .slice(matrix, start, end)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    Napi::Array inputMatrix = info[0].As<Napi::Array>();
+    uint32_t totalRows = inputMatrix.Length();
+
+    int32_t startReq = info[1].As<Napi::Number>().Int32Value();
+    int32_t endReq = info[2].As<Napi::Number>().Int32Value();
+
+    uint32_t start = std::max(0, std::min((int)totalRows, startReq));
+    uint32_t end = std::max(0, std::min((int)totalRows, endReq));
+
+    if (start >= end) {
+        return Napi::Array::New(env, 0);
+
+    }
+    
+    uint32_t resultSize = end - start;
+    Napi::Array result = Napi::Array::New(env, resultSize);
+
+    for (uint32_t i = 0; i < resultSize; i++) {
+
+        result.Set(i, inputMatrix.Get(start + i));
+    }
+
+    return result;
+}
 
 
 
@@ -746,6 +872,13 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "min"), Napi::Function::New(env, Min));
         exports.Set(Napi::String::New(env, "max"), Napi::Function::New(env, Max));
         exports.Set(Napi::String::New(env, "median"), Napi::Function::New(env, Median));
+        exports.Set(Napi::String::New(env, "var"), Napi::Function::New(env, Var));
+        exports.Set(Napi::String::New(env, "column"), Napi::Function::New(env, Column));
+        exports.Set(Napi::String::New(env, "row"), Napi::Function::New(env, Row));
+
+        exports.Set(Napi::String::New(env, "slice"), Napi::Function::New(env, Slice));
+
+
         return exports;
 }
 NODE_API_MODULE(numscrpt_core, Init);

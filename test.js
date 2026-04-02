@@ -143,6 +143,7 @@ const low = numscrpt.min(stockPrices);
 const high = numscrpt.max(stockPrices);
 
 console.log(`The chart range should be: ${low} to ${high}`);
+
 //Median
 console.log(numscrpt.median([10, 2, 38, 23, 38])); 
 // Sorted: [2, 10, 23, 38, 38] -> Result: 23
@@ -153,4 +154,70 @@ console.log(numscrpt.median([10, 2, 38, 23]));
 const prices = [[200], [250], [10000]];
 console.log(numscrpt.median(prices)); 
 // 250
+
+//Variance
+const data = [1, 2, 3, 4, 5];
+
+const variance = numscrpt.var(data);
+const stdDev = numscrpt.std(data);
+
+console.log("Variance:", variance); // 2
+console.log("Std Dev:", stdDev);     // 1.414 (sqrt of 2)
+
+console.log(numscrpt.var([[10, 20], [30, 40]])); // 125
+//Column
+const dataset = [
+    [25, 50000, 1], // [Age, Salary, Remote]
+    [30, 60000, 0],
+    [45, 95000, 1],
+    [22, 42000, 0]
+];
+
+// 1. Extract just the Salary column (Index 1)
+const salaries = numscrpt.column(dataset, 1); 
+
+// 2. Perform Stats on just that column
+const avgSalary = numscrpt.mean(salaries);
+const maxSalary = numscrpt.max(salaries);
+
+console.log(`Average Salary: ${avgSalary}`); // 61750
+
+//Row
+const dataset = [
+    [1, 250000], // ID, Price
+    [2, 310000],
+    [3, 10000000] 
+];
+
+// Find the index of the max price
+const prices = numscrpt.column(dataset, 1);
+const maxVal = numscrpt.max(prices);
+const outlierIndex = Array.from(prices).indexOf(maxVal);
+
+// Grab the full record for that outlier
+const record = numscrpt.row(dataset, outlierIndex);
+console.log("Full Record of Outlier:", record); // [3, 10000000]
+
+// Slice
+const dataset = [
+    [1, "Alice"],
+    [2, "Bob"],
+    [3, "Charlie"],
+    [4, "David"],
+    [5, "Eve"]
+];
+
+// Grab the middle three rows (Index 1, 2, 3)
+const chunk = numscrpt.slice(dataset, 1, 4);
+
+console.log(chunk[0][1]);
+Output:
+[
+  [2, "Bob"],
+  [3, "Charlie"],
+  [4, "David"]
+]
 */
+
+
+
