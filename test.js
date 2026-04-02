@@ -124,4 +124,33 @@ const clean = (matrix) => {
 }
 const result = numscrpt.dot(A, invA);
 console.log(clean(result));
+//STD
+const lowSpread = [10, 11, 10, 9, 10];
+console.log (numscrpt.std(lowSpread));
+
+const highSpread = [0, 10, 20, 30 ,40];
+console.log (numscrpt.std(highSpread));
+
+const matrix = [[1,2], [10,20]];
+console.log (numscrpt.std(matrix));
+//Min-Max
+const stockPrices = [
+    [150.25, 155.10, 148.00],
+    [152.00, 158.50, 151.20]
+];
+
+const low = numscrpt.min(stockPrices);
+const high = numscrpt.max(stockPrices);
+
+console.log(`The chart range should be: ${low} to ${high}`);
+//Median
+console.log(numscrpt.median([10, 2, 38, 23, 38])); 
+// Sorted: [2, 10, 23, 38, 38] -> Result: 23
+
+console.log(numscrpt.median([10, 2, 38, 23])); 
+// Sorted: [2, 10, 23, 38] -> Result: 16.5 (Avg of 10 and 23)
+
+const prices = [[200], [250], [10000]];
+console.log(numscrpt.median(prices)); 
+// 250
 */

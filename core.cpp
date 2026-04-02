@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <limits>
+#include <algorithm>
 
 //Array Function
 //Not Updated to be the fastest im using the most basic shit
@@ -597,6 +599,134 @@ Napi::Value Inverse(const Napi::CallbackInfo& info) {
 
 }
 
+//Standard Deviation
+void flattenForStd(Napi::Value val, std::vector<double>& flatData) {
+    if (val.IsNumber()) {
+        flatData.push_back(val.As<Napi::Number>().DoubleValue());
+    } else if (val.IsArray()) {
+        Napi::Array arr = val.As<Napi::Array>();
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            flattenForStd(arr.Get(i), flatData);
+        }
+    } else if (val.IsTypedArray()) {
+        Napi::Float64Array ta = val.As<Napi::Float64Array>();
+
+        for (size_t i = 0; i < ta.ElementLength(); i++) {
+            flatData.push_back(ta[i]);
+        }
+    }
+}
+Napi::Value Std(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1 ) return Napi::Number::New(env, 0);
+
+    std::vector<double> data;
+    flattenForStd(info[0], data);
+
+    if (data.empty()) return Napi::Number::New(env, 0);
+
+    double sum = 0;
+    for (double v : data) sum += v;
+    double mean = sum / data.size();
+
+    double sqDiffSum = 0;
+    for (double v : data) {
+        sqDiffSum += std::pow(v - mean, 2);
+
+    }
+
+    double variance = sqDiffSum / data.size();
+
+    double stdDev = std::sqrt(variance);
+
+    return Napi::Number::New(env, stdDev);
+
+}
+
+
+//Min - Max
+void flattenMinMax(Napi::Value val, std::vector<double>& flatData) {
+    if (val.IsNumber()) {
+        flatData.push_back(val.As<Napi::Number>().DoubleValue());
+    } else if (val.IsArray()) {
+        Napi::Array arr = val.As<Napi::Array>();
+        for (uint32_t i = 0; i < arr.Length(); i++) {
+            flattenInternal(arr.Get(i), flatData);
+        }
+    } else if (val.IsTypedArray()) {
+        Napi::Float64Array ta = val.As<Napi::Float64Array>();
+        for (size_t i = 0; i < ta.ElementLength(); i++) {
+            flatData.push_back(ta[i]);
+        }
+    }
+}
+
+Napi::Value Min(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return env.Null();
+
+    std::vector<double> data;
+
+    flattenMinMax(info[0], data);
+
+    if (data.empty()) return env.Null();
+
+    double currentMin = std::numeric_limits<double>::infinity();
+    for (double v : data) {
+        if (v < currentMin) currentMin = v;
+    }
+
+    return Napi::Number::New(env, currentMin);
+}
+Napi::Value Max(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return env.Null();
+
+    std::vector<double> data;
+    flattenMinMax(info[0], data);
+
+    if (data.empty()) return env.Null();
+
+    double currentMax = -std::numeric_limits<double>::infinity();
+
+    for (double v: data) {
+        if (v > currentMax) currentMax = v;
+
+    }
+    return Napi::Number::New(env, currentMax);
+}
+
+Napi::Value Median(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1) return env.Null();
+
+    std::vector<double> data;
+
+    flattenInternal(info[0], data);
+
+    if (data.empty()) return Napi::Number::New(env, 0);
+
+    std::sort(data.begin(), data.end());
+
+    size_t size = data.size();
+    double median;
+
+    if (size % 2 == 0) {
+        median = (data[size / 2-1] + data[size / 2]) / 2.0;
+
+    } else {
+        median = data[size / 2];
+    }
+
+    return Napi::Number::New(env, median);
+}
+
+
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));
         exports.Set(Napi::String::New(env, "shape"), Napi::Function::New(env, Shape));
@@ -612,6 +742,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "ndim"), Napi::Function::New(env, NDim));
         exports.Set(Napi::String::New(env, "size"), Napi::Function::New(env, Size));
         exports.Set(Napi::String::New(env, "dtype"), Napi::Function::New(env, Dtype));
+        exports.Set(Napi::String::New(env, "std"), Napi::Function::New(env, Std));
+        exports.Set(Napi::String::New(env, "min"), Napi::Function::New(env, Min));
+        exports.Set(Napi::String::New(env, "max"), Napi::Function::New(env, Max));
+        exports.Set(Napi::String::New(env, "median"), Napi::Function::New(env, Median));
         return exports;
 }
 NODE_API_MODULE(numscrpt_core, Init);
