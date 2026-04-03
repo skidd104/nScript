@@ -20,6 +20,9 @@ Variance - Done
 Column - Done
 Row - Done
 Slice - Done
+Isnan - Done
+Dropna - Done
+Fillna - Done
 
 
 ## Arrays 
@@ -223,3 +226,38 @@ const dataset = [
 
 const chunk = numscrpt.slice(dataset, 1, 4);
 
+## IsNaN
+-const sensorData = [10.5, NaN, 12.1, 11.8, NaN];
+
+-const mask = numscrpt.isnan(sensorData);
+-console.log(mask); 
+
+-const missingCount = mask.filter(x => x === true).length;
+if (missingCount > 0) {
+    console.log(`Warning: You have ${missingCount} holes in your data!`);
+}
+
+## DropNa
+const dataset = [
+    [10, 20, 30],
+    [5, NaN, 15], 
+    [1, 2, 3],
+    [NaN, 0, 0] 
+];
+
+const cleaned = numscrpt.dropna(dataset);
+
+console.log(cleaned.length); 
+console.log(cleaned); 
+[
+  [10, 20, 30],
+  [1, 2, 3]
+]
+
+## FillNA
+const dataset = [10, NaN, 30, NaN, 50];
+
+const zeros = numscrpt.fillna(dataset, 0); 
+
+const average = numscrpt.mean(numscrpt.dropna(dataset));
+const scientific = numscrpt.fillna(dataset, average);

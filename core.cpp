@@ -850,6 +850,148 @@ Napi::Value Slice(const Napi::CallbackInfo& info) {
 
     return result;
 }
+// IsNan
+Napi::Value IsNaNInternal(Napi::Env env, Napi::Value val) {
+    if (val.IsNumber()) {
+        bool result = std::isnan(val.As<Napi::Number>().DoubleValue());
+        return Napi::Boolean::New(env, result);
+    }
+
+    if (val.IsArray()) {
+        Napi::Array input = val.As<Napi::Array>();
+        uint32_t len = input.Length();
+        Napi::Array mask = Napi::Array::New(env, len);
+
+        for (uint32_t i = 0; i < len; i++) {
+            mask.Set(i, IsNaNInternal(env, input.Get(i)));
+        }
+        return mask;
+    }
+
+    if (val.IsNull() || val.IsUndefined()) {
+        return Napi::Boolean::New(env, true);
+    }
+
+    return Napi::Boolean::New(env, false);
+
+}
+
+Napi::Value IsNaN(const Napi::CallbackInfo& info) {
+    Napi::Env env =info.Env();
+
+    if (info.Length() < 1) {
+        return Napi::Boolean::New(env, false);
+
+    }
+
+    return IsNaNInternal(env, info[0]);
+}
+
+//DropNa
+bool rowHasNaN(Napi::Value rowVal) {
+    if (!rowVal.IsArray()) {
+        return rowVal.IsNumber() && std::isnan(rowVal.As<Napi::Number>().DoubleValue());
+
+    }
+
+    Napi::Array row = rowVal.As<Napi::Array>();
+
+    for (uint32_t j = 0; j < row.Length(); j++) {
+        Napi::Value cell = row.Get(j);
+
+        if (cell.IsNumber() && std::isnan(cell.As<Napi::Number>().DoubleValue())) {
+            return true;
+        }
+        if (cell.IsNull() || cell.IsUndefined()) {
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+Napi::Value DropNA(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 1 || !info[0].IsArray()) {
+        return env.Null();
+    }
+
+    Napi::Array input = info[0].As<Napi::Array>();
+    uint32_t rowCount = input.Length();
+
+    std::vector<Napi::Value> cleanRows;
+
+    for (uint32_t i = 0; i < rowCount; i++) {
+        Napi::Value currentRow = input.Get(i);
+
+        if (!rowHasNaN(currentRow)) {
+            cleanRows.push_back(currentRow);
+        }
+
+    }
+
+    Napi::Array result = Napi::Array::New(env, cleanRows.size());
+    for (uint32_t i = 0; i < cleanRows.size(); i++) {
+        result.Set(i, cleanRows[i]);
+    }
+
+    return result;
+
+}
+
+//FillNa
+Napi::Value FillNAInternal(Napi::Env env, Napi::Value val, double replacement) {
+    if (val.IsNumber()) {
+        double d = val.As<Napi::Number>().DoubleValue();
+        if (std::isnan(d)) {
+            return Napi::Number::New(env, replacement);
+
+        }
+        return val;
+
+    }
+
+    if (val.IsNull() || val.IsUndefined()) {
+        return Napi::Number::New(env, replacement);
+    }
+
+    if (val.IsArray()) {
+        Napi::Array input = val.As<Napi::Array>();
+        uint32_t len = input.Length();
+        Napi::Array result = Napi::Array::New(env, len);
+
+        for (uint32_t i = 0; i < len; i++) {
+            result.Set(i, FillNAInternal(env, input.Get(i), replacement));
+
+        }
+
+        return result;
+
+    }
+    return val;
+
+}
+
+Napi::Value FillNA(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if (info.Length() < 2 || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Usage: .fillna(data, replacementValue)").ThrowAsJavaScriptException();
+        return env.Null();
+
+    }
+
+    double replacement = info[1].As<Napi::Number>().DoubleValue();
+    return FillNAInternal(env, info[0], replacement);
+
+}
+
+
+
+
 
 
 
@@ -877,6 +1019,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "row"), Napi::Function::New(env, Row));
 
         exports.Set(Napi::String::New(env, "slice"), Napi::Function::New(env, Slice));
+        exports.Set(Napi::String::New(env, "isnan"), Napi::Function::New(env, IsNaN));
+        exports.Set(Napi::String::New(env, "dropna"), Napi::Function::New(env, DropNA));
+        exports.Set(Napi::String::New(env, "fillna"), Napi::Function::New(env, FillNA));
 
 
         return exports;

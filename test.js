@@ -217,7 +217,45 @@ Output:
   [3, "Charlie"],
   [4, "David"]
 ]
-*/
+//IsNan
+const sensorData = [10.5, NaN, 12.1, 11.8, NaN];
 
+const mask = numscrpt.isnan(sensorData);
+console.log(mask); // [false, true, false, false, true]
+
+// Real-world EDA check:
+const missingCount = mask.filter(x => x === true).length;
+if (missingCount > 0) {
+    console.log(`Warning: You have ${missingCount} holes in your data!`);
+}
+//DropNa
+const dataset = [
+    [10, 20, 30],
+    [5, NaN, 15],  // This row will be deleted
+    [1, 2, 3],
+    [NaN, 0, 0]    // This row will be deleted
+];
+
+const cleaned = numscrpt.dropna(dataset);
+
+console.log(cleaned.length); // 2
+console.log(cleaned); 
+[
+  [10, 20, 30],
+  [1, 2, 3]
+]
+//FillNA
+const dataset = [10, NaN, 30, NaN, 50];
+
+// Strategy 1: Fill with Zero
+const zeros = numscrpt.fillna(dataset, 0); 
+// [10, 0, 30, 0, 50]
+
+// Strategy 2: Fill with Mean (The Professional Choice)
+const average = numscrpt.mean(numscrpt.dropna(dataset)); // Get mean of existing data
+const scientific = numscrpt.fillna(dataset, average);
+console.log (scientific);
+// [10, 30, 30, 30, 50]
+*/
 
 
