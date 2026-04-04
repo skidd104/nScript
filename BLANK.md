@@ -46,7 +46,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#linear algebra">Linear Algebra</a></li>
+    <li><a href="#linearalgebra">LinearAlgebra</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -182,7 +182,7 @@ const flat = numscrpt.flatten(matrix);
 ```
 
 ### Transpose
-```
+```javascript
 const matrix = [
     [1,2,3],
     [4,5,6]
@@ -192,7 +192,23 @@ const flipped = numscrpt.transpose(matrix);
 
 ```
 
-## Linear Algebra
+## LinearAlgebra
+
+### Dot
+```javascript
+const A = [
+    [1,2,3],
+    [4,5,6]
+];
+
+const B = [
+    [7, 8],
+    [9, 10],
+    [11, 12]
+];
+const result = numscrpt.dot(A, B);
+
+```
 
 
 
