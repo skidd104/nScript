@@ -101,6 +101,47 @@ const zeros = numscrpt.zeros([3,4]);
 const zeros = numscrpt.zero(5);
 ```
 
+### Reshape
+```javascript 
+let arr = numscrpt.array([1,2,3,4]);
+let reshapedArr = numscrpt.reshape(arr, [2,2]);
+//Error Case
+let reshapedArr = numscrpt.reshape(arr, [2,3]);
+```
+
+### Ndim
+```JavaScript
+const d1 = numscrpt.array([1,2,3]);
+const d2 = numscrpt.array([[1,2,3],[4,5,6]]);
+const d3 = numscrpt.array([[[1,2,3], [4,5,6]], [[1,2,3], [4,5,6]]]);
+const dimension = numscrpt.ndim(d3);
+```
+
+### Size 
+```javascript
+const flatArr = new Float64Array([1,2,3,4]);
+const multArr = ([[1,2,3],[4,5,6]]);
+const totalSize = numscrpt.size(multArr);
+```
+
+### Dtype 
+Casting a 3D Nested Array to a Flat Int32Array
+```javascript
+const d3 = [[[1.1, 2.2], [3.3, 4.4]]];
+const intArr = numscrpt.dtype(d3, 'i');
+```
+
+Casting to Strings
+```javascript
+const strArr = numscrpt.dtype([10.5, 20.9], 'S');
+```
+Simple Operations
+```javascript
+console.log(numscrpt.dtype(intArr);
+```
+
+
+
 
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors

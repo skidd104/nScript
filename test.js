@@ -271,4 +271,7 @@ console.log(numscrpt.corr(studyHours, randomNoise));
 */
 
 
+const arr = numscrpt.array([1,2,3]);
+const ndim = numscrpt.ndim(arr);
 
+console.log (ndim);
