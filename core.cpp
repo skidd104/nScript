@@ -989,6 +989,58 @@ Napi::Value FillNA(const Napi::CallbackInfo& info) {
 
 }
 
+//Correlation to be honest i dont know what im doing this shit trash
+Napi::Value Corr(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (info.Length() < 2 || !info[0].IsArray() || !info[1].IsArray()) {
+        Napi::TypeError::New(env, "Two arrays required").ThrowAsJavaScriptException();
+        return env.Null();
+
+    }
+
+    std::vector<double> a, b;
+    flattenInternal(info[0], a);
+    flattenInternal(info[1], b);
+
+    if (a.size() != b.size() || a.empty()) {
+        Napi::Error::New(env, "Arrays must be the same non-zero length").ThrowAsJavaScriptException();
+        return env.Null();
+
+    }
+
+    size_t n = a.size();
+
+    double sumA = 0, sumB = 0;
+    for (size_t i = 0; i < n; i++) {
+        sumA += a[i];
+        sumB += b[i];
+
+    }
+
+    double meanA = sumA / n;
+    double meanB = sumB / n;
+
+    double numerator = 0;
+    double sumSqA = 0;
+    double sumSqB = 0;
+
+    for (size_t i =0; i < n; i++) {
+        double diffA = a[i] - meanA;
+        double diffB = b[i] - meanB;
+        numerator += (diffA * diffB);
+        sumSqA += (diffA * diffA);
+        sumSqB += (diffB * diffB);
+
+    }
+
+    double denominator = std::sqrt(sumSqA * sumSqB);
+    if (std::abs(denominator) < 1e-15) return Napi::Number::New(env, 0);
+
+    return Napi::Number::New(env, numerator / denominator);
+
+}
+
 
 
 
@@ -1022,6 +1074,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "isnan"), Napi::Function::New(env, IsNaN));
         exports.Set(Napi::String::New(env, "dropna"), Napi::Function::New(env, DropNA));
         exports.Set(Napi::String::New(env, "fillna"), Napi::Function::New(env, FillNA));
+        exports.Set(Napi::String::New(env, "corr"), Napi::Function::New(env, Corr));
 
 
         return exports;

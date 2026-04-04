@@ -256,6 +256,19 @@ const average = numscrpt.mean(numscrpt.dropna(dataset)); // Get mean of existing
 const scientific = numscrpt.fillna(dataset, average);
 console.log (scientific);
 // [10, 30, 30, 30, 50]
+
+//Correlation
+const studyHours = [1, 2, 3, 4, 5];
+const testScores = [52, 60, 71, 84, 95];
+
+const relationship = numscrpt.corr(studyHours, testScores);
+console.log(`Correlation: ${relationship.toFixed(4)}`); 
+// Output: Correlation: 0.9984 (Extremely strong positive relationship!)
+
+const randomNoise = [99, 2, 45, 12, 7];
+console.log(numscrpt.corr(studyHours, randomNoise)); 
+// Output: ~ -0.6 (A negative, weaker relationship)
 */
+
 
 

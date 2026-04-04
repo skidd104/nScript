@@ -23,6 +23,7 @@ Slice - Done
 Isnan - Done
 Dropna - Done
 Fillna - Done
+Correlation - Done
 
 
 ## Arrays 
@@ -238,26 +239,36 @@ if (missingCount > 0) {
 }
 
 ## DropNa
-const dataset = [
+-const dataset = [
     [10, 20, 30],
     [5, NaN, 15], 
     [1, 2, 3],
     [NaN, 0, 0] 
 ];
 
-const cleaned = numscrpt.dropna(dataset);
+-const cleaned = numscrpt.dropna(dataset);
 
-console.log(cleaned.length); 
-console.log(cleaned); 
+-console.log(cleaned.length); 
+-console.log(cleaned); 
 [
   [10, 20, 30],
   [1, 2, 3]
 ]
 
 ## FillNA
-const dataset = [10, NaN, 30, NaN, 50];
+-const dataset = [10, NaN, 30, NaN, 50];
 
-const zeros = numscrpt.fillna(dataset, 0); 
+-const zeros = numscrpt.fillna(dataset, 0); 
 
-const average = numscrpt.mean(numscrpt.dropna(dataset));
-const scientific = numscrpt.fillna(dataset, average);
+-const average = numscrpt.mean(numscrpt.dropna(dataset));
+-const scientific = numscrpt.fillna(dataset, average);
+
+## Correlation
+-const studyHours = [1, 2, 3, 4, 5];
+-const testScores = [52, 60, 71, 84, 95];
+
+-const relationship = numscrpt.corr(studyHours, testScores);
+-console.log(`Correlation: ${relationship.toFixed(4)}`); 
+
+-const randomNoise = [99, 2, 45, 12, 7];
+-console.log(numscrpt.corr(studyHours, randomNoise)); 
