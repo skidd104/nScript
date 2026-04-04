@@ -77,9 +77,17 @@ To build the native C++ core, you need `node-gyp` and a C++ compiler installed o
 
 ## Usage
 
+### Arrays
+```JavaScript
+const array1 = numscrpt.array([1,2,3,4,5]);
+const array2 = numscrpt.array([1,2,3],[4,5,6]);
+const array3 = numscrpt.array([[[1,2,3],[4,5,6]], [[1,2,3]]]);
+const array4 = numscrpt.array([[1,2],[3,4],[5,6]]);
+```
 
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/nScript.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/nScript/graphs/contributors
+
+[contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
+[contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/nScript.svg?style=for-the-badge
 [forks-url]: https://github.com/github_username/nScript/network/members
 [stars-shield]: https://img.shields.io/github/stars/github_username/nScript.svg?style=for-the-badge
