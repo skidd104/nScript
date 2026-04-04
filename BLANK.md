@@ -9,7 +9,7 @@
 
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/nScript">
+  <a href="https://github.com/skidd104/nScript">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -18,14 +18,14 @@
   <p align="center">
     A high-performance C++ powered engine for Linear Algebra and Exploratory Data Analysis in Node.js.
     <br />
-    <a href="https://github.com/github_username/nScript"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/skidd104/nScript"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/nScript">View Demo</a>
+    <a href="https://github.com/skidd104/nScript">View Demo</a>
     &middot;
-    <a href="https://github.com/github_username/nScript/issues">Report Bug</a>
+    <a href="https://github.com/skidd104/nScript/issues">Report Bug</a>
     &middot;
-    <a href="https://github.com/github_username/nScript/issues">Request Feature</a>
+    <a href="https://github.com/skidd104/nScript/issues">Request Feature</a>
   </p>
 </div>
 
@@ -73,3 +73,9 @@ To build the native C++ core, you need `node-gyp` and a C++ compiler installed o
 * npm
   ```sh
   npm install npm@latest -g
+  ```
+
+## Usage
+
+
+
