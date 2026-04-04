@@ -46,7 +46,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#linear algebra">Linear Algebra</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -125,21 +125,74 @@ const totalSize = numscrpt.size(multArr);
 ```
 
 ### Dtype 
-Casting a 3D Nested Array to a Flat Int32Array
+1.)Casting a 3D Nested Array to a Flat Int32Array
 ```javascript
 const d3 = [[[1.1, 2.2], [3.3, 4.4]]];
 const intArr = numscrpt.dtype(d3, 'i');
 ```
 
-Casting to Strings
+2.)Casting to Strings
 ```javascript
 const strArr = numscrpt.dtype([10.5, 20.9], 'S');
 ```
-Simple Operations
+3.)Simple Operations
 ```javascript
 console.log(numscrpt.dtype(intArr);
 ```
 
+
+### Add
+```javascript
+//1D Add Operations
+const a = [1,2,3];
+const b = [10,20,30];
+console.log (numscrpt.add(a, b));
+
+//2D Add Operations
+const matrix1 = [[1,1], [1,1]];
+const matrix2 = [[5,5], [5,5]];
+console.log(numscrpt.add(matrix1, matrix2));
+
+//Error Case
+numscrpt.add([1,2], [1,2,3]);
+```
+
+### Mean
+```javascript
+//1D Declerations
+console.log(numscrpt.mean([1, 2, 3, 4, 5]));
+
+//2D Array
+const matrix = [
+   [10, 20],
+    [30, 40]
+];
+console.log(numscrpt.mean(matrix));
+
+//3D Array
+const d3 = [ [[1, 1], [1, 1]], [[2, 2], [2, 2]] ];
+console.log(numscrpt.mean(d3));
+```
+
+### Flatten
+```javascript
+const matrix = [[1,2,3], [4,5,6]];
+const flat = numscrpt.flatten(matrix);
+
+```
+
+### Transpose
+```
+const matrix = [
+    [1,2,3],
+    [4,5,6]
+
+];
+const flipped = numscrpt.transpose(matrix);
+
+```
+
+## Linear Algebra
 
 
 
