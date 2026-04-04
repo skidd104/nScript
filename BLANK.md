@@ -78,4 +78,22 @@ To build the native C++ core, you need `node-gyp` and a C++ compiler installed o
 ## Usage
 
 
+[contributors-shield]: https://img.shields.io/github/contributors/github_username/nScript.svg?style=for-the-badge
+[contributors-url]: https://github.com/github_username/nScript/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/github_username/nScript.svg?style=for-the-badge
+[forks-url]: https://github.com/github_username/nScript/network/members
+[stars-shield]: https://img.shields.io/github/stars/github_username/nScript.svg?style=for-the-badge
+[stars-url]: https://github.com/github_username/nScript/stargazers
+[issues-shield]: https://img.shields.io/github/issues/github_username/nScript.svg?style=for-the-badge
+[issues-url]: https://github.com/github_username/nScript/issues
+[license-shield]: https://img.shields.io/github/license/github_username/nScript.svg?style=for-the-badge
+[license-url]: https://github.com/github_username/nScript/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/linkedin_username
 
+[CPP-shield]: https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white
+[CPP-url]: https://isocpp.org/
+[Node-shield]: https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
+[Node-url]: https://nodejs.org/
+[Napi-shield]: https://img.shields.io/badge/Node--API-FFD700?style=for-the-badge&logo=node.js&logoColor=black
+[Napi-url]: https://nodejs.org/api/n-api.html
