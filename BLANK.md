@@ -85,6 +85,22 @@ const array3 = numscrpt.array([[[1,2,3],[4,5,6]], [[1,2,3]]]);
 const array4 = numscrpt.array([[1,2],[3,4],[5,6]]);
 ```
 
+### Shape
+```JavaScript
+const Shape = numscrpt.shape(array);
+```
+
+### Sum 
+```JavaScript
+const Sum = numscrpt.sum(array);
+```
+
+### Zeros
+```javascript
+const zeros = numscrpt.zeros([3,4]);
+const zeros = numscrpt.zero(5);
+```
+
 
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
