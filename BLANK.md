@@ -47,7 +47,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#linearalgebra">LinearAlgebra</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#eda">EDA</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -209,6 +209,42 @@ const B = [
 const result = numscrpt.dot(A, B);
 
 ```
+
+### Inverse
+```javascript
+const A = [
+    [4, 7],
+    [2, 6]
+];
+
+const invA = numscrpt.inv(A);
+const clean = (matrix) => {
+    return matrix.map(row => 
+        row.map(val => Math.abs(val) < 1e-10 ? 0 : val)
+    );
+}
+const result = numscrpt.dot(A, invA);
+
+```
+
+## EDA
+Exploratory Data Analysis
+
+### Std
+```javascript
+const lowSpread = [10, 11, 10, 9, 10];
+console.log(numscrpt.std(lowSpread)); 
+
+const highSpread = [0, 10, 20, 30, 40];
+console.log(numscrpt.std(highSpread)); 
+
+const matrix = [[1, 2], [10, 20]];
+console.log(numscrpt.std(matrix));
+
+```
+
+
+
 
 
 
