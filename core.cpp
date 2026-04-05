@@ -5,6 +5,16 @@
 #include <limits>
 #include <algorithm>
 
+/*
+ *      !!Issues
+ *      Ok here me out some of the function like flatten helpers are duplicated
+ *      got no time for that to fix and evaluate for now.
+ *
+ *      Some of the error i did not put a throwbackjavaexception
+ *
+ *
+ */
+
 //Array Function
 //Not Updated to be the fastest im using the most basic shit
 Napi::Value Array(const Napi::CallbackInfo& info) {
@@ -52,12 +62,11 @@ Napi::Value Array(const Napi::CallbackInfo& info) {
     return resultMatrix;
 }
 
-
+//Shape
 //This is already good
 Napi::Value Shape(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    // Safety Check
     if (!info[0].IsArray()) return env.Null();
 
     Napi::Array outerArray = info[0].As<Napi::Array>();
@@ -78,6 +87,7 @@ Napi::Value Shape(const Napi::CallbackInfo& info) {
 }
 
 
+//Sum of Array Function
 //Recursive Math Engine Summation for the Sum Method
 double recursiveSumHelper(Napi::Value value) {
     double total = 0;
@@ -95,7 +105,6 @@ double recursiveSumHelper(Napi::Value value) {
 
     return total;
 }
-//Sum of Array Function
 Napi::Value Sum(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -151,6 +160,8 @@ Napi::Value Add(const Napi::CallbackInfo& info) {
 }
 
 //Mean Action
+//There is flattenhelper somewhere here but nvm i will fix it tommorrow
+//april 8 or something
 void flattenMeanHelper(Napi::Value val, std::vector<double>& flatData) {
     if (val.IsNumber()) {
         flatData.push_back(val.As<Napi::Number>().DoubleValue());
@@ -339,7 +350,7 @@ Napi::Value Size(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, 0);
 }
 
-//Flatten
+//Flatten this is the most used flattenInternal function
 void flattenInternal(Napi::Value val, std::vector<double>& flatData) {
     if (val.IsNumber()) {
         flatData.push_back(val.As<Napi::Number>().DoubleValue());
@@ -374,7 +385,7 @@ Napi::Value Flatten(const Napi::CallbackInfo& info) {
     return result;
 }
 
-//Dtype Recursive Flattener
+//Dtype Recursive Flattener this is replaceable by the flatternInternal function
 void flattenRecursive(Napi::Value val, std::vector<double>& flatData) {
     if (val.IsNumber()) {
         flatData.push_back(val.As<Napi::Number>().DoubleValue());
@@ -442,6 +453,7 @@ Napi::Value Dtype(const Napi::CallbackInfo& info) {
     return env.Null();;
 }
 
+//Transpose
 Napi::Value Transpose(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -1040,12 +1052,6 @@ Napi::Value Corr(const Napi::CallbackInfo& info) {
     return Napi::Number::New(env, numerator / denominator);
 
 }
-
-
-
-
-
-
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
         exports.Set(Napi::String::New(env, "array"), Napi::Function::New(env, Array));

@@ -378,16 +378,16 @@ console.log(numscrpt.corr(studyHours, randomNoise));
 ```
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/nScript.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/nScript/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/nScript.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/nScript/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/nScript.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/nScript/issues
-[license-shield]: https://img.shields.io/github/license/github_username/nScript.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/nScript/blob/master/LICENSE.txt
+[forks-shield]: https://img.shields.io/github/forks/skidd104/nScript.svg?style=for-the-badge
+[forks-url]: https://github.com/skidd104/nScript/network/members
+[stars-shield]: https://img.shields.io/github/stars/skidd104/nScript.svg?style=for-the-badge
+[stars-url]: https://github.com/skidd104/nScript/stargazers
+[issues-shield]: https://img.shields.io/github/issues/skidd104/nScript.svg?style=for-the-badge
+[issues-url]: https://github.com/skidd104/nScript/issues
+[license-shield]: https://img.shields.io/github/license/skidd104/nScript.svg?style=for-the-badge
+[license-url]: https://github.com/skidd104/nScript/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
+[linkedin-url]: https://www.linkedin.com/in/michael-ian-leguira-a5b9793aa/ 
 
 [CPP-shield]: https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white
 [CPP-url]: https://isocpp.org/
