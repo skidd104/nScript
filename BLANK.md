@@ -55,7 +55,10 @@
 
 ## About The Project 
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<div align="center">
+  <img src="images/cover.png" alt="nScript Dashboard" width="100%">
+</div>
+
 nScript is a specialized mathematical library that bridges the gap between JavaScript's ease of use and C++'s raw computational power. Designed for data analyst working with large datasets, it provides an optimized suite for multidimensional array manipulation, matrix operations, and comprehensive exploratory data analysis (EDA).
 
 ### Built With
