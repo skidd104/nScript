@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>nScript EDA Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 40px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
+        .card h3 { margin: 0; color: #666; font-size: 0.9rem; }
+        .card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: #4FC08D; }
+        .chart-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+    <h1>UK Accidents: nScript EDA Report</h1>
+    
+    <div class="grid">
+        <div class="card"><h3>Total Records</h3><p>3981</p></div>
+        <div class="card"><h3>Mean Cost</h3><p>£1901.24</p></div>
+        <div class="card"><h3>Max Cost</h3><p>£3701.79</p></div>
+        <div class="card"><h3>Correlation</h3><p>0.0044</p></div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="mainChart"></canvas>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('mainChart'), {
+            type: 'line',
+            data: {
+                labels: [1,2,3,4,5,6,11],
+                datasets: [{
+                    label: 'Avg Cost by Number of Casualties',
+                    data: [1901.0234899713455,1895.7658505154636,1925.8675714285716,1928.2042105263156,1881.3358333333333,2821.15,1847.23],
+                    borderColor: '#4FC08D',
+                    backgroundColor: 'rgba(79, 192, 141, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#4FC08D',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { title: { display: true, text: 'Cost (£)' }, grid: { color: '#eee' } },
+                    x: { title: { display: true, text: 'Casualties' }, grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

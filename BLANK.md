@@ -53,9 +53,11 @@
   </ol>
 </details>
 
-## About The Project
+## About The Project 
 
-nScript is a specialized mathematical library that bridges the gap between JavaScript's ease of use and C++'s raw computational power. Designed for developers working with large datasets, it provides an optimized suite for multidimensional array manipulation, matrix operations, and comprehensive exploratory data analysis (EDA).
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+nScript is a specialized mathematical library that bridges the gap between JavaScript's ease of use and C++'s raw computational power. Designed for data analyst working with large datasets, it provides an optimized suite for multidimensional array manipulation, matrix operations, and comprehensive exploratory data analysis (EDA).
 
 ### Built With
 
@@ -376,17 +378,6 @@ console.log(`Correlation: ${relationship.toFixed(4)}`);
 const randomNoise = [99, 2, 45, 12, 7];
 console.log(numscrpt.corr(studyHours, randomNoise)); 
 ```
-
-## License
-Distributed under the project_linces. See `LICENSE.txt` for more information.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Contact
-N/A
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/skidd104/nScript.svg?style=for-the-badge
@@ -398,7 +389,8 @@ N/A
 [license-shield]: https://img.shields.io/github/license/skidd104/nScript.svg?style=for-the-badge
 [license-url]: https://github.com/skidd104/nScript/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/michael-ian-leguira-a5b9793aa/ 
+[linkedin-url]: https://www.linkedin.com/in/michael-ian-leguira-a5b9793aa/
+[product-screenshot]: images/cover.png
 
 [CPP-shield]: https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white
 [CPP-url]: https://isocpp.org/
