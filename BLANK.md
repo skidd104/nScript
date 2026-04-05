@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skidd104/nScript">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="100" height="100">
   </a>
 
 <h3 align="center">nScript</h3>
@@ -56,7 +56,7 @@
 ## About The Project 
 
 <div align="center">
-  <img src="images/cover.png" alt="nScript Dashboard" width="100%">
+  <img src="images/test.png" alt="nScript Dashboard" width="100%">
 </div>
 
 nScript is a specialized mathematical library that bridges the gap between JavaScript's ease of use and C++'s raw computational power. Designed for data analyst working with large datasets, it provides an optimized suite for multidimensional array manipulation, matrix operations, and comprehensive exploratory data analysis (EDA).
