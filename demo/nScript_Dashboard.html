@@ -7,11 +7,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 40px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; }
-        .card h3 { margin: 0; color: #666; font-size: 0.9rem; }
+        .card h3 { margin: 0; color: #666; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
         .card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; color: #4FC08D; }
         .chart-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .speed-badge { color: #3498db !important; } /* Distinct color for speed */
     </style>
 </head>
 <body>
@@ -22,6 +23,7 @@
         <div class="card"><h3>Mean Cost</h3><p>£1901.24</p></div>
         <div class="card"><h3>Max Cost</h3><p>£3701.79</p></div>
         <div class="card"><h3>Correlation</h3><p>0.0044</p></div>
+        <div class="card"><h3>Calculation Time</h3><p class="speed-badge">9.1843 ms</p></div>
     </div>
 
     <div class="chart-container">
