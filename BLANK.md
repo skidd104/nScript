@@ -243,11 +243,139 @@ console.log(numscrpt.std(matrix));
 
 ```
 
+### Min-Max
+```javascript
+const stockPrices = [
+    [150.25, 155.10, 148.00],
+    [152.00, 158.50, 151.20]
+];
 
+const low = numscrpt.min(stockPrices);
+const high = numscrpt.max(stockPrices);
 
+console.log(`The chart range should be: ${low} to ${high}`);
 
+```
 
+### Median
+```javascript
+console.log(numscrpt.median([10, 2, 38, 23, 38])); 
+console.log(numscrpt.median([10, 2, 38, 23])); 
+const prices = [[200], [250], [10000]];
+console.log(numscrpt.median(prices)); 
+```
 
+### Variance
+```javascript
+const data = [1, 2, 3, 4, 5];
+
+const variance = numscrpt.var(data);
+const stdDev = numscrpt.std(data);
+
+console.log("Variance:", variance); 
+console.log("Std Dev:", stdDev);     
+
+console.log(numscrpt.var([[10, 20], [30, 40]])); 
+```
+
+### Column
+```javascript
+const dataset = [
+    [25, 50000, 1], // [Age, Salary, Remote]
+    [30, 60000, 0],
+    [45, 95000, 1],
+    [22, 42000, 0]
+];
+
+const salaries = numscrpt.column(dataset, 1); 
+
+const avgSalary = numscrpt.mean(salaries);
+const maxSalary = numscrpt.max(salaries);
+console.log(`Average Salary: ${avgSalary}`);
+```
+
+### Row
+```javascript
+const dataset = [
+    [1, 250000], // ID, Price
+    [2, 310000],
+    [3, 10000000] 
+];
+
+const prices = numscrpt.column(dataset, 1);
+const maxVal = numscrpt.max(prices);
+const outlierIndex = Array.from(prices).indexOf(maxVal);
+
+const record = numscrpt.row(dataset, outlierIndex);
+console.log("Full Record of Outlier:", record);
+```
+
+### Slice
+
+```javascript
+const dataset = [
+    [1, "Alice"],
+    [2, "Bob"],
+    [3, "Charlie"],
+    [4, "David"],
+    [5, "Eve"]
+];
+
+const chunk = numscrpt.slice(dataset, 1, 4);
+```
+### IsNaN
+```javascript
+const sensorData = [10.5, NaN, 12.1, 11.8, NaN];
+
+const mask = numscrpt.isnan(sensorData);
+console.log(mask); 
+
+const missingCount = mask.filter(x => x === true).length;
+if (missingCount > 0) {
+    console.log(`Warning: You have ${missingCount} holes in your data!`);
+}
+```
+
+### DropNA
+```javascript
+const dataset = [
+    [10, 20, 30],
+    [5, NaN, 15], 
+    [1, 2, 3],
+    [NaN, 0, 0] 
+];
+
+const cleaned = numscrpt.dropna(dataset);
+
+console.log(cleaned.length); 
+console.log(cleaned); 
+[
+  [10, 20, 30],
+  [1, 2, 3]
+]
+```
+
+### FillNa
+```javascript
+const dataset = [10, NaN, 30, NaN, 50];
+
+const zeros = numscrpt.fillna(dataset, 0); 
+
+const average = numscrpt.mean(numscrpt.dropna(dataset));
+const scientific = numscrpt.fillna(dataset, average);
+```
+
+### Correlation
+```javascript
+const studyHours = [1, 2, 3, 4, 5];
+const testScores = [52, 60, 71, 84, 95];
+
+const relationship = numscrpt.corr(studyHours, testScores);
+console.log(`Correlation: ${relationship.toFixed(4)}`); 
+
+const randomNoise = [99, 2, 45, 12, 7];
+console.log(numscrpt.corr(studyHours, randomNoise)); 
+```
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/nScript.svg?style=for-the-badge
