@@ -103,11 +103,11 @@ const html = `
 </html>
 `;
 
-fs.writeFileSync('nScript_Dashboard.html', html);
+fs.writeFileSync('dashboard.html', html);
 console.log(`
 ---------------------------------------
 Records Scanned  : ${totalRecords}
 Calculation Time : ${calcTime} ms (Native C++)
-Output File      : nScript_Dashboard.html
+Output File      : dashboard.html
 ---------------------------------------
 `);
