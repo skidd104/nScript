@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skidd104/nScript">
-    <img src="images/logo.png" alt="Logo" width="100" height="100">
+    <img src="images/logo.png" alt="Logo" width="100" height="50">
   </a>
 
 <h3 align="center">nScript</h3>
@@ -70,6 +70,21 @@ nScript is a specialized mathematical library that bridges the gap between JavaS
 ## Getting Started
 
 ### Prerequisites
+
+Before installing, ensure you have the following based on your Operating System:
+
+* MacOS
+```macOS
+xcode-select --install
+
+```
+* Windows
+```
+npm install --global windows-build-tools
+
+```
+* Linux
+install `GCC` or `Clang` and `Python 3.x`
 
 To build the native C++ core, you need `node-gyp` and a C++ compiler installed on your system.
 * npm
