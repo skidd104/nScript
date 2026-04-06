@@ -10,7 +10,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/skidd104/nScript">
-    <img src="images/logo.png" alt="Logo" width="100" height="50">
+    <img src="images/logo.png" alt="Logo" width="100" height="100">
   </a>
 
 <h3 align="center">nScript</h3>
