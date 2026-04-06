@@ -84,8 +84,11 @@ npm install --global windows-build-tools
 
 ```
 * Linux
+```
 install `GCC` or `Clang` and `Python 3.x`
+```
 
+### Installation
 * Install Node-Gyp
 ```npm
 install -g node-gyp
