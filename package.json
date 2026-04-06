@@ -1,6 +1,7 @@
 {
   "name": "function_arguments",
   "version": "0.0.0",
+  "license": "MIT",
   "description": "Node.js Addons Example #2",
   "main": "test.js",
   "private": true,

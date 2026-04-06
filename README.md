@@ -21,7 +21,6 @@
     <a href="https://github.com/skidd104/nScript"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/skidd104/nScript">View Demo</a>
     &middot;
     <a href="https://github.com/skidd104/nScript/issues">Report Bug</a>
     &middot;
@@ -49,7 +48,6 @@
     <li><a href="#linearalgebra">LinearAlgebra</a></li>
     <li><a href="#eda">EDA</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -86,11 +84,21 @@ npm install --global windows-build-tools
 * Linux
 install `GCC` or `Clang` and `Python 3.x`
 
-To build the native C++ core, you need `node-gyp` and a C++ compiler installed on your system.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* Install Node-Gyp
+```npm
+install -g node-gyp
+```
+* Setup Project
+```bash
+git clone https://github.com/skidd104/nScript.git
+cd nScript
+npm install
+```
+* Build Native
+```bash
+node-gyp configure build
+```
+
 
 ## Usage
 
@@ -393,6 +401,15 @@ console.log(`Correlation: ${relationship.toFixed(4)}`);
 const randomNoise = [99, 2, 45, 12, 7];
 console.log(numscrpt.corr(studyHours, randomNoise)); 
 ```
+
+## License
+
+Distributed under the project license. See `LICENSE` for more information
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
 [contributors-shield]: https://img.shields.io/github/contributors/skidd104/nScript.svg?style=for-the-badge
 [contributors-url]: https://github.com/skidd104/nScript/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/skidd104/nScript.svg?style=for-the-badge
@@ -402,7 +419,7 @@ console.log(numscrpt.corr(studyHours, randomNoise));
 [issues-shield]: https://img.shields.io/github/issues/skidd104/nScript.svg?style=for-the-badge
 [issues-url]: https://github.com/skidd104/nScript/issues
 [license-shield]: https://img.shields.io/github/license/skidd104/nScript.svg?style=for-the-badge
-[license-url]: https://github.com/skidd104/nScript/blob/master/LICENSE.txt
+[license-url]: https://github.com/skidd104/nScript/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/michael-ian-leguira-a5b9793aa/
 [product-screenshot]: images/cover.png
