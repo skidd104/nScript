@@ -12,3 +12,8 @@ package-lock.json
 # OS generated files
 .DS_Store
 .clangd
+
+# Misc
+test.js 
+run_build.sh
+prototype.cpp
