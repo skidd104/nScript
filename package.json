@@ -1,16 +1,30 @@
 {
-  "name": "function_arguments",
-  "version": "0.0.0",
+  "name": "nscript-core",
+  "version": "1.0.0",
+  "description": "A high-performance C++ native engine for Linear Algebra and Data Analysis in Node.js.",
+  "main": "index.js",
   "license": "MIT",
-  "description": "Node.js Addons Example #2",
-  "main": "test.js",
-  "private": true,
+  "private": false, 
   "dependencies": {
     "bindings": "~1.5.0",
     "node-addon-api": "^8.1.0"
   },
   "scripts": {
-    "test": "node test.js"
+    "build": "node-gyp rebuild",
+    "test": "node demo/uk_accidents_eda.js"
   },
-  "gypfile": true
+  "gypfile": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skidd104/nScript.git"
+  },
+  "keywords": [
+    "C++",
+    "Node-API",
+    "Linear Algebra",
+    "Data Science",
+    "Machine Learning",
+    "EDA"
+  ],
+  "author": "Michael Ian"
 }

@@ -1,4 +1,4 @@
-const numscrpt = require('bindings')('numscrpt_core');
+const numscrpt = require('../index.js');
 const fs = require('fs');
 const { performance } = require('perf_hooks');
 
